@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from './config';
 
 export default function AdminLogin({ onConnecte }) {
   const [email, setEmail] = useState('');
@@ -12,7 +13,7 @@ export default function AdminLogin({ onConnecte }) {
     setChargement(true);
 
     try {
-      const res = await fetch('http://localhost:3000/admin/login', {
+      const res = await fetch(`${API_BASE_URL}/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, motDePasse }),

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from './config';
 
 export default function LoginModal({ isOpen, onClose }) {
   if (!isOpen) return null;
@@ -54,7 +55,7 @@ export default function LoginModal({ isOpen, onClose }) {
     setMessageSucces('');
 
     try {
-      const reponse = await fetch('http://127.0.0.1:3000/students/login', {
+      const reponse = await fetch(`${API_BASE_URL}/students/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, motDePasse: password }),
@@ -93,7 +94,7 @@ export default function LoginModal({ isOpen, onClose }) {
     setMessageErreur(''); 
 
     try {
-      const reponse = await fetch('http://127.0.0.1:3000/students/verify-activation', {
+      const reponse = await fetch(`${API_BASE_URL}/students/verify-activation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cin: cinActivation }),
@@ -117,7 +118,7 @@ export default function LoginModal({ isOpen, onClose }) {
     setMessageErreur('');
 
     try {
-      const reponse = await fetch('http://127.0.0.1:3000/students/finalize-activation', {
+      const reponse = await fetch(`${API_BASE_URL}/students/finalize-activation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cin: cinActivation, email: nouvelEmail, motDePasse: nouvelMdp }),
@@ -142,7 +143,7 @@ export default function LoginModal({ isOpen, onClose }) {
     setMessageSucces('');
 
     try {
-      const reponse = await fetch('http://127.0.0.1:3000/students/forgot-password', {
+      const reponse = await fetch(`${API_BASE_URL}/students/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: emailRecuperation }),
@@ -166,7 +167,7 @@ export default function LoginModal({ isOpen, onClose }) {
     setMessageSucces('');
 
     try {
-      const reponse = await fetch('http://127.0.0.1:3000/students/reset-password', {
+      const reponse = await fetch(`${API_BASE_URL}/students/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

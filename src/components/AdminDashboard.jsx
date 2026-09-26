@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { API_BASE_URL } from './config';
 
 // ---------- Icônes (traits fins, style entreprise) ----------
 const Icon = ({ path, size = 18 }) => (
@@ -200,7 +201,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
     formData.append('fichier', fichier);
 
     try {
-      const res = await fetch('http://localhost:3000/admin/liste-blanche/import', {
+      const res = await fetch(`${API_BASE_URL}/admin/liste-blanche/import`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
         body: formData,
@@ -226,7 +227,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
   const chargerListeBlanche = async () => {
     setChargementListeBlanche(true);
     try {
-      const res = await fetch(`http://localhost:3000/admin/liste-blanche?recherche=${encodeURIComponent(rechercheListeBlanche)}`, {
+      const res = await fetch(`${API_BASE_URL}/admin/liste-blanche?recherche=${encodeURIComponent(rechercheListeBlanche)}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
       });
       const data = await res.json();
@@ -245,7 +246,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
 
   const supprimerEntreeListeBlanche = async (id) => {
     if (!window.confirm('Supprimer définitivement cette entrée de la liste blanche ?')) return;
-    await fetch(`http://localhost:3000/admin/liste-blanche/${id}`, {
+    await fetch(`${API_BASE_URL}/admin/liste-blanche/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
     });
@@ -254,7 +255,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
 
   const enregistrerEditionListeBlanche = async () => {
     const { id, nom, prenom, cin } = entreeEnEdition;
-    await fetch(`http://localhost:3000/admin/liste-blanche/${id}`, {
+    await fetch(`${API_BASE_URL}/admin/liste-blanche/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
       body: JSON.stringify({ nom, prenom, cin }),
@@ -273,7 +274,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
   const chargerEtudiants = async () => {
     setChargementEtudiants(true);
     try {
-      const res = await fetch(`http://localhost:3000/admin/etudiants?recherche=${encodeURIComponent(rechercheEtudiants)}`, {
+      const res = await fetch(`${API_BASE_URL}/admin/etudiants?recherche=${encodeURIComponent(rechercheEtudiants)}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
       });
       const data = await res.json();
@@ -300,7 +301,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
   const chargerEtudiantsEligiblesCertificat = async () => {
     setChargementCertificats(true);
     try {
-      const res = await fetch(`http://localhost:3000/admin/etudiants?limite=1000`, {
+      const res = await fetch(`${API_BASE_URL}/admin/etudiants?limite=1000`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
       });
       const data = await res.json();
@@ -324,7 +325,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
 
   const chargerNouveauxCertificats = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/admin/certificats/nouveaux`, {
+      const res = await fetch(`${API_BASE_URL}/admin/certificats/nouveaux`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
       });
       const data = await res.json();
@@ -345,7 +346,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
   const ouvrirCloche = async () => {
     setClocheOuverte((v) => !v);
     if (!clocheOuverte && nouveauxCertificats.length > 0) {
-      await fetch(`http://localhost:3000/admin/certificats/marquer-vus`, {
+      await fetch(`${API_BASE_URL}/admin/certificats/marquer-vus`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
       });
@@ -361,7 +362,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
   const chargerStatsDashboard = async () => {
     setChargementStats(true);
     try {
-      const res = await fetch('http://localhost:3000/admin/dashboard/stats', {
+      const res = await fetch(`${API_BASE_URL}/admin/dashboard/stats`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
       });
       setStatsDashboard(await res.json());
@@ -386,7 +387,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
 
   const basculerBlocageEtudiant = async (etudiant) => {
     const action = etudiant.estBloque ? 'debloquer' : 'bloquer';
-    await fetch(`http://localhost:3000/admin/etudiants/${etudiant.id}/${action}`, {
+    await fetch(`${API_BASE_URL}/admin/etudiants/${etudiant.id}/${action}`, {
       method: 'PUT',
       headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
     });
@@ -395,7 +396,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
 
   const supprimerEtudiant = async (id) => {
     if (!window.confirm('Supprimer définitivement ce compte étudiant ? Toute sa progression sera perdue.')) return;
-    await fetch(`http://localhost:3000/admin/etudiants/${id}`, {
+    await fetch(`${API_BASE_URL}/admin/etudiants/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
     });
@@ -412,7 +413,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
   const chargerVideosDisponibles = async () => {
     setChargementVideos(true);
     try {
-      const res = await fetch('http://localhost:3000/admin/videos', {
+      const res = await fetch(`${API_BASE_URL}/admin/videos`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
       });
       const data = await res.json();
@@ -431,7 +432,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
     try {
       const formData = new FormData();
       formData.append('video', fichier);
-      const res = await fetch('http://localhost:3000/admin/videos/upload', {
+      const res = await fetch(`${API_BASE_URL}/admin/videos/upload`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
         body: formData,
@@ -460,7 +461,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
   // retire localement de la liste si ça réussit. Laisse remonter l'erreur
   // au composant SelecteurVideo pour affichage (ex: "encore utilisée").
   const supprimerVideoDuServeur = async (nomFichier) => {
-    const res = await fetch(`http://localhost:3000/admin/videos/${encodeURIComponent(nomFichier)}`, {
+    const res = await fetch(`${API_BASE_URL}/admin/videos/${encodeURIComponent(nomFichier)}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
     });
@@ -484,7 +485,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
   const chargerCoursApercu = async () => {
     setChargementCours(true);
     try {
-      const res = await fetch('http://localhost:3000/admin/apercu/cours', {
+      const res = await fetch(`${API_BASE_URL}/admin/apercu/cours`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
       });
       const data = await res.json();
@@ -521,7 +522,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
     setEnregistrementEnCours(true);
     try {
       const estEdition = !!modalCours.id;
-      const url = estEdition ? `http://localhost:3000/admin/cours/${modalCours.id}` : 'http://localhost:3000/admin/cours';
+      const url = estEdition ? `${API_BASE_URL}/admin/cours/${modalCours.id}` : `${API_BASE_URL}/admin/cours`;
       const res = await fetch(url, {
         method: estEdition ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
@@ -540,7 +541,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
 
   const supprimerCoursAction = async (id) => {
     if (!window.confirm('Supprimer ce cours ? Tous ses chapitres et quiz seront supprimés définitivement.')) return;
-    await fetch(`http://localhost:3000/admin/cours/${id}`, {
+    await fetch(`${API_BASE_URL}/admin/cours/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
     });
@@ -555,8 +556,8 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
     try {
       const estEdition = !!modalChapitre.id;
       const url = estEdition
-        ? `http://localhost:3000/admin/chapitres/${modalChapitre.id}`
-        : `http://localhost:3000/admin/cours/${coursSelectionneId}/chapitres`;
+        ? `${API_BASE_URL}/admin/chapitres/${modalChapitre.id}`
+        : `${API_BASE_URL}/admin/cours/${coursSelectionneId}/chapitres`;
       const res = await fetch(url, {
         method: estEdition ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
@@ -581,7 +582,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
 
   const supprimerChapitreAction = async (id) => {
     if (!window.confirm('Supprimer ce chapitre ? Ses questions de quiz seront supprimées définitivement.')) return;
-    await fetch(`http://localhost:3000/admin/chapitres/${id}`, {
+    await fetch(`${API_BASE_URL}/admin/chapitres/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
     });
@@ -596,8 +597,8 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
     try {
       const estEdition = !!modalQuestion.id;
       const url = estEdition
-        ? `http://localhost:3000/admin/questions/${modalQuestion.id}`
-        : `http://localhost:3000/admin/chapitres/${chapitreSelectionneId}/questions`;
+        ? `${API_BASE_URL}/admin/questions/${modalQuestion.id}`
+        : `${API_BASE_URL}/admin/chapitres/${chapitreSelectionneId}/questions`;
       const res = await fetch(url, {
         method: estEdition ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
@@ -621,7 +622,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
 
   const supprimerQuestionAction = async (id) => {
     if (!window.confirm('Supprimer cette question ?')) return;
-    await fetch(`http://localhost:3000/admin/questions/${id}`, {
+    await fetch(`${API_BASE_URL}/admin/questions/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
     });
@@ -650,7 +651,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
 
     setChargementMotDePasse(true);
     try {
-      const res = await fetch('http://localhost:3000/admin/changer-mot-de-passe', {
+      const res = await fetch(`${API_BASE_URL}/admin/changer-mot-de-passe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
         body: JSON.stringify({ ancienMotDePasse, nouveauMotDePasse }),
@@ -715,7 +716,7 @@ export default function AdminDashboard({ onOuvrirApercu, onDeconnexion } = {}) {
     setMessageProfil(null);
     setChargementProfil(true);
     try {
-      const res = await fetch('http://localhost:3000/admin/profil', {
+      const res = await fetch(`${API_BASE_URL}/admin/profil`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token_admin')}` },
         body: JSON.stringify({ motDePasseActuel: motDePasseProfil, email: nouvelEmailAdmin, nom: nouveauNomAdmin }),
